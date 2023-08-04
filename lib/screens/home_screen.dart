@@ -23,6 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onClickedTodoItem(id, state) {
     log("TODO item with id $id has been clicked");
+    Todo clickedTodoIdem = todoList.where((element) => element.id == id).first;
+    if (clickedTodoIdem != null) {
+      clickedTodoIdem.isDone = !clickedTodoIdem.isDone;
+    }
+    setState(() {});
   }
 
   @override
