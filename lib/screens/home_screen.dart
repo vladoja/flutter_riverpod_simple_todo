@@ -34,18 +34,29 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Simpe TO DO list')),
-      body: Center(
-        child: ListView.separated(
-          itemCount: todoList.length,
-          itemBuilder: (context, index) {
-            // return Text(todoList[index].title);
-            return TodoItem(
-                isChecked: todoList[index].isDone,
-                id: todoList[index].id,
-                title: todoList[index].title,
-                onChanged: onClickedTodoItem);
-          },
-          separatorBuilder: (context, index) => const Divider(height: 0),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: todoList.length,
+                  itemBuilder: (context, index) {
+                    // return Text(todoList[index].title);
+                    return TodoItem(
+                        isChecked: todoList[index].isDone,
+                        id: todoList[index].id,
+                        title: todoList[index].title,
+                        onChanged: onClickedTodoItem);
+                  },
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 0),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
