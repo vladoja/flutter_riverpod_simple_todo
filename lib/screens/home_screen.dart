@@ -14,11 +14,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Todo> todoList = [];
+  late TextEditingController _addItemController;
 
   @override
   void initState() {
+    _addItemController = TextEditingController();
     todoList = dummyTodoList;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _addItemController.dispose();
+    super.dispose();
   }
 
   void onClickedTodoItem(id, state) {
@@ -30,6 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  void onClickedAddTodoItem() {
+    log("Added new item '${_addItemController.text}'");
+    if (_addItemController.text.isNotEmpty &&
+        _addItemController.text.length > 3) {
+      todoList.add(Todo(DateTime.now().millisecondsSinceEpoch.toString(),
+          _addItemController.text, false));
+      setState(() {});
+      log("Total todo items: ${todoList.length}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +57,18 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            TextField(
+                controller: _addItemController,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: "Add New",
+                  filled: true,
+                  suffix: IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: onClickedAddTodoItem,
+                    color: Colors.blue,
+                  ),
+                )),
             Expanded(
               child: SingleChildScrollView(
                 child: ListView.separated(
