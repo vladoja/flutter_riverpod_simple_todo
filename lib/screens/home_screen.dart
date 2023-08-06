@@ -1,25 +1,27 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_simple_todo/data/dummy_data.dart';
 import 'package:riverpod_simple_todo/models/todo.dart';
+import 'package:riverpod_simple_todo/providers/todo_provider.dart';
 import 'package:riverpod_simple_todo/widgets/todo_widget.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<Todo> todoList = [];
   late TextEditingController _addItemController;
 
   @override
   void initState() {
     _addItemController = TextEditingController();
-    todoList = dummyTodoList;
+    todoList = ref.read(todosProvider);
     super.initState();
   }
 
