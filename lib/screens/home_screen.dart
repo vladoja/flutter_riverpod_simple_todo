@@ -53,43 +53,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Simpe TO DO list')),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-                controller: _addItemController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  hintText: "Add New",
-                  filled: true,
-                  suffix: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: onClickedAddTodoItem,
-                    color: Colors.blue,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Simpe TO DO list')),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TextField(
+                  controller: _addItemController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    hintText: "Add New",
+                    filled: true,
+                    suffix: IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: onClickedAddTodoItem,
+                      color: Colors.blue,
+                    ),
+                  )),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: todoList.length,
+                    itemBuilder: (context, index) {
+                      // return Text(todoList[index].title);
+                      return TodoItem(
+                          isChecked: todoList[index].isDone,
+                          id: todoList[index].id,
+                          title: todoList[index].title,
+                          onChanged: onClickedTodoItem);
+                    },
+                    separatorBuilder: (context, index) =>
+                        const Divider(height: 0),
                   ),
-                )),
-            Expanded(
-              child: SingleChildScrollView(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: todoList.length,
-                  itemBuilder: (context, index) {
-                    // return Text(todoList[index].title);
-                    return TodoItem(
-                        isChecked: todoList[index].isDone,
-                        id: todoList[index].id,
-                        title: todoList[index].title,
-                        onChanged: onClickedTodoItem);
-                  },
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: 0),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
