@@ -40,7 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void onClickedTodoItem(id, state) {
-    log("TODO item with id $id has been clicked");
+    // log("TODO item with id $id has been clicked");
     Todo clickedTodoIdem = todoList.where((element) => element.id == id).first;
     if (clickedTodoIdem != null) {
       clickedTodoIdem.isDone = !clickedTodoIdem.isDone;
@@ -48,14 +48,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     setState(() {});
   }
 
+  void _showInfoMessage({required message, bool warning = false}) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message,
+            style: (warning)
+                ? Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                    backgroundColor: Theme.of(context).colorScheme.onError)
+                : Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    )),
+      ),
+    );
+  }
+
   void onClickedAddTodoItem() {
-    log("Added new item '${_addItemController.text}'");
+    // log("Added new item '${_addItemController.text}'");
     if (_addItemController.text.isNotEmpty &&
-        _addItemController.text.length > 3) {
+        _addItemController.text.length >= 3) {
       todoList.add(Todo(DateTime.now().millisecondsSinceEpoch.toString(),
           _addItemController.text, false));
-      setState(() {});
-      log("Total todo items: ${todoList.length}");
+
+      setState(() {
+        // _addItemController.clear;
+        _addItemController.text = "";
+      });
+      // log("Total todo items: ${todoList.length}");
+      _showInfoMessage(message: 'Successfuly created');
+    } else {
+      _showInfoMessage(
+          message: 'Unable to create todo item. Min 3 characters',
+          warning: true);
     }
   }
 
