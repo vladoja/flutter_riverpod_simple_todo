@@ -87,17 +87,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // final Map<Filter, bool> _filtersAll = ref.read(filtersProvider);
-    final Filter activeFilter = ref
-        .watch(filtersProvider)
-        .entries
-        .where((element) => element.value == true)
-        .first
-        .key;
-    final List<Todo> todosToDisplay = (activeFilter == Filter.all)
-        ? todoList
-        : (activeFilter == Filter.done)
-            ? todoList.where((element) => element.isDone == true).toList()
-            : todoList.where((element) => element.isDone == false).toList();
+    final List<Todo> todosToDisplay = ref.watch(filteredTodosProvider);
+    // Data for ToggleButtons.isSelected
     final List<bool> _filterList = ref.watch(filtersProvider).values.toList();
     return GestureDetector(
       onTap: () {
