@@ -67,9 +67,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void onClickedAddTodoItem() {
     // log("Added new item '${_addItemController.text}'");
     if (_addItemController.text.isNotEmpty &&
-        _addItemController.text.length >= 3) {
+        _addItemController.text.toString().trim().length >= 3) {
       todoList.add(Todo(DateTime.now().millisecondsSinceEpoch.toString(),
-          _addItemController.text, false));
+          _addItemController.text.toString().trim(), false));
 
       setState(() {
         // _addItemController.clear;
@@ -88,7 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     // final Map<Filter, bool> _filtersAll = ref.read(filtersProvider);
     final List<Todo> todosToDisplay = ref.watch(filteredTodosProvider);
-    // Data for ToggleButtons.isSelected
+    // Data for Widget ToggleButtons.isSelected
     final List<bool> _filterList = ref.watch(filtersProvider).values.toList();
     return GestureDetector(
       onTap: () {
