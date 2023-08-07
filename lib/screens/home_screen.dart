@@ -61,6 +61,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final Map<Filter, bool> _filtersAll = ref.read(filtersProvider);
+    final Filter activeFilter = ref
+        .watch(filtersProvider)
+        .entries
+        .where((element) => element.value == true)
+        .first
+        .key;
+    final List<Todo> todosToDisplay = (activeFilter == Filter.all)
+        ? todoList
+        : (activeFilter == Filter.done)
+            ? todoList.where((element) => element.isDone == true).toList()
+            : todoList.where((element) => element.isDone == false).toList();
     final List<bool> _filterList = ref.watch(filtersProvider).values.toList();
     return GestureDetector(
       onTap: () {
@@ -117,13 +129,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: SingleChildScrollView(
                   child: ListView.separated(
                     shrinkWrap: true,
-                    itemCount: todoList.length,
+                    itemCount: todosToDisplay.length,
                     itemBuilder: (context, index) {
-                      // return Text(todoList[index].title);
+                      // return Text(todosToDisplay[index].title);
                       return TodoItem(
-                          isChecked: todoList[index].isDone,
-                          id: todoList[index].id,
-                          title: todoList[index].title,
+                          isChecked: todosToDisplay[index].isDone,
+                          id: todosToDisplay[index].id,
+                          title: todosToDisplay[index].title,
                           onChanged: onClickedTodoItem);
                     },
                     separatorBuilder: (context, index) =>
