@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_simple_todo/models/todo.dart';
+import 'package:riverpod_simple_todo/providers/filter_provider.dart';
 import 'package:riverpod_simple_todo/providers/todo_provider.dart';
 import 'package:riverpod_simple_todo/widgets/todo_widget.dart';
 
@@ -22,12 +23,13 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<Todo> todoList = [];
   late TextEditingController _addItemController;
-  final List<bool> _filterList = <bool>[true, false, false];
+  late List<Filter> filterKeyList;
 
   @override
   void initState() {
     _addItemController = TextEditingController();
     todoList = ref.read(todosProvider);
+    filterKeyList = ref.read(filtersProvider).keys.toList();
     super.initState();
   }
 
@@ -59,6 +61,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<bool> _filterList = ref.watch(filtersProvider).values.toList();
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -87,12 +90,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ToggleButtons(
                 direction: Axis.horizontal,
                 onPressed: (int index) {
-                  setState(() {
-                    // The button that is tapped is set to true, and the others to false.
-                    for (int i = 0; i < _filterList.length; i++) {
-                      _filterList[i] = i == index;
-                    }
-                  });
+                  ref
+                      .read(filtersProvider.notifier)
+                      .setFilter(filterKeyList[index], true);
+                  // setState(() {
+                  //   log("Toggle button '$index' is pressed");
+                  //   // The button that is tapped is set to true, and the others to false.
+                  //   for (int i = 0; i < _filterList.length; i++) {
+                  //     _filterList[i] = i == index;
+                  //   }
+                  // });
                 },
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
                 selectedBorderColor: Colors.blue[700],
