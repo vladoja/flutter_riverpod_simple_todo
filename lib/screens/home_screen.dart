@@ -2,10 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_simple_todo/data/dummy_data.dart';
 import 'package:riverpod_simple_todo/models/todo.dart';
 import 'package:riverpod_simple_todo/providers/todo_provider.dart';
 import 'package:riverpod_simple_todo/widgets/todo_widget.dart';
+
+const List<Widget> filterWidgets = <Widget>[
+  Text('All'),
+  Text('Open'),
+  Text('Done')
+];
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +22,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<Todo> todoList = [];
   late TextEditingController _addItemController;
+  final List<bool> _filterList = <bool>[true, false, false];
 
   @override
   void initState() {
@@ -75,6 +81,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       color: Colors.blue,
                     ),
                   )),
+              const SizedBox(
+                height: 10,
+              ),
+              ToggleButtons(
+                direction: Axis.horizontal,
+                onPressed: (int index) {
+                  setState(() {
+                    // The button that is tapped is set to true, and the others to false.
+                    for (int i = 0; i < _filterList.length; i++) {
+                      _filterList[i] = i == index;
+                    }
+                  });
+                },
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                selectedBorderColor: Colors.blue[700],
+                selectedColor: Colors.white,
+                fillColor: Colors.blue[500],
+                color: Colors.blue[600],
+                constraints: const BoxConstraints(
+                  minHeight: 40.0,
+                  minWidth: 80.0,
+                ),
+                isSelected: _filterList,
+                children: filterWidgets,
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: ListView.separated(
